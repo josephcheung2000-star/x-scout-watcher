@@ -1,0 +1,27 @@
+{
+"fails": {
+"Binance": 0,
+"Bybit": 1,
+"OKX": 0,
+"Upbit": 1
+},
+"keys": [
+"binance:d49de208bb6d4a26b02677d7c3d89b5d",
+"binance:6133e417dcfe43a8ad20c0db1b53c7e8",
+"okx:okx-to-list-vvv-usdt-venice-for-spot-trading",
+"okx:okx-to-list-grvt-usdt-grvt-for-spot-trading",
+"okx:okx-to-list-aeon-usdt-aeon-for-spot-trading",
+"okx:okx-to-list-slx-usdt-solstice-for-spot-trading",
+"okx:okx-to-list-tao-usdt-bittensor-for-spot-trading",
+"okx:okx-to-list-cards-usdt-collector-crypt-for-spot-trading",
+"okx:okx-to-list-re-re-for-spot-trading-and-convert-pre-market-futures-to-standard-perpetual-futures",
+"okx:okx-to-list-irys-usdt-irys-for-spot-trading",
+"okx:okx-to-list-ai-usdt-gensyn-for-spot-trading"
+],
+"notified_down": [],
+"pinged_syms": {},
+"seeded": [
+"Binance",
+"OKX"
+]
+}
