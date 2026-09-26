@@ -87,7 +87,10 @@ def main():
     seen.setdefault("keys", []); seen.setdefault("seeded", []); seen.setdefault("fails", {}); seen.setdefault("notified_down", [])
     seen.setdefault("pinged_syms", {})
     now = time.time(); report = {}
+    # Upbit and Bybit geo-block GitHub's US runners (HTTP 403, confirmed 2026-09-26); enable via WATCH_SOURCES if run elsewhere
+    enabled = os.environ.get("WATCH_SOURCES", "Binance,OKX").split(",")
     for name, fn in (("Binance", binance), ("OKX", okx), ("Upbit", upbit), ("Bybit", bybit)):
+        if name not in enabled: continue
         try:
             items = fn()
         except Exception as e:
