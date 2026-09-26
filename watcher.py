@@ -42,7 +42,7 @@ def okx():
     for a in d["data"][0]["details"]:
         t = a["title"]
         spot = re.search(r"(?i)spot|/usdt", t); deriv = re.search(r"(?i)perpetual|futures", t)
-        if re.search(r"(?i)\bto list\b", t) and spot:
+        if re.search(r"(?i)\bto list\b", t) and (re.search(r"(?i)spot", t) or (spot and not deriv)):
             slug = (a.get("url") or "").rstrip("/").split("/")[-1] or f"{a.get('pTime')}:{t.lower()}"
             out.append({"key": "okx:" + slug, "ex": "OKX", "title": t, "ts": int(a["pTime"]) / 1000, "url": a.get("url"),
                         "sym": tick(t) or (re.search(r"list ([A-Z0-9]{2,12})/", t) or [None, None])[1]})
@@ -94,7 +94,7 @@ def main():
         try:
             items = fn()
         except Exception as e:
-            seen["fails"][name] = seen["fails"].get(name, 0) + 1
+            seen["fails"][name] = min(seen["fails"].get(name, 0) + 1, FAIL_N)   # capped: no commit churn during outages
             report[name] = f"error {type(e).__name__}"
             if seen["fails"][name] >= FAIL_N and name not in seen["notified_down"]:
                 try:
@@ -105,11 +105,10 @@ def main():
                     pass
             continue
         report[name] = f"ok {len(items)}"
-        if seen["fails"].get(name, 0) and name in seen["notified_down"]:
-            try:
-                send(f"X-scout watcher: {name} announcements reachable again."); seen["notified_down"].remove(name)
-            except Exception:
-                pass
+        if name in seen["notified_down"]:
+            seen["notified_down"].remove(name)          # re-arm the outage notice even if this message fails
+            try: send(f"X-scout watcher: {name} announcements reachable again.")
+            except Exception: pass
         seen["fails"][name] = 0
         if name not in seen["seeded"]:        # first successful response: seed silently
             seen["keys"] += [i["key"] for i in items if i["key"] not in seen["keys"]]

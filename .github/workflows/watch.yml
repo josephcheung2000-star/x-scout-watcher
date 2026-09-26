@@ -31,5 +31,6 @@ jobs:
           git add seen.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -q -m "state $(date -u +%FT%TZ)"
-            for i in 1 2 3; do git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q && break; sleep 5; done
+            ok=0; for i in 1 2 3; do if git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q; then ok=1; break; fi; git rebase --abort 2>/dev/null; sleep 5; done
+            [ "$ok" = 1 ] || { echo "push failed after 3 tries"; exit 1; }
           fi
