@@ -1,0 +1,35 @@
+name: listing-watch
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+    - cron: "17 3 1 * *"        # monthly run that also refreshes keepalive.txt (GitHub pauses idle schedules after 60 days)
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync to latest state
+        run: git pull -q --rebase origin "${GITHUB_REF_NAME}"
+      - name: Check exchange announcements
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ secrets.TG_CHAT }}
+        run: python3 watcher.py
+      - name: Save seen state
+        if: always()
+        run: |
+          git config user.name "x-scout-watcher"
+          git config user.email "actions@users.noreply.github.com"
+          if [ "$(date -u +%d%H)" = "0103" ]; then date -u +%F > keepalive.txt; git add keepalive.txt; fi
+          git add seen.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -q -m "state $(date -u +%FT%TZ)"
+            for i in 1 2 3; do git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q && break; sleep 5; done
+          fi
