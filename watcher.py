@@ -8,7 +8,7 @@ Sources (feeds), grouped for WATCH_SOURCES (comma list of groups or feeds, case-
   coinbase Coinbase   Advanced Trade public products: a new base asset appears (new_at)
            CoinbaseStatus  Coinbase Exchange status RSS "<PAIR> Markets Open"
   upbit    Upbit      KRW market set diff (api.upbit.com/v1/market/all)
-           UpbitWarn  new warning / caution flags on KRW markets
+           UpbitWarn  new investment warnings (투자유의) on KRW markets
   bithumb  Bithumb    KRW market set diff (api.bithumb.com/v1/market/all)
            BithumbNotice  listing notices (feed-api.bithumb.com, latest 5)
   opt-in only (geo-blocked on GitHub runners): bybit (Bybit), upbit_notice (UpbitNotice)
@@ -197,7 +197,8 @@ def upbit_warn():
         m = i["raw"]; ev = m.get("market_event") or {}
         flags = []
         if ev.get("warning") or m.get("market_warning") == "CAUTION": flags.append("WARNING")
-        flags += [k for k, v in (ev.get("caution") or {}).items() if v]
+        # caution sub-flags (GLOBAL_PRICE_DIFFERENCES, PRICE_FLUCTUATIONS, TRADING_VOLUME_SOARING, ...) toggle many times a day:
+        # noise, never pinged. Only the real investment warning (투자유의, delisting risk) is.
         for f in flags:
             out.append(item(f"upbitwarn:{m['market']}:{f}", f"Upbit flag on {i['sym']}: {f}", time.time(), i["url"],
                             i["sym"], detected=True, flag=f))
