@@ -1,5 +1,5 @@
 {
- "checked_at": 1791312708,
+ "checked_at": 1791399257,
  "priors": {
   "generated": "2026-09-26T15:18:18+00:00",
   "method": "Entry = first price >=3h after the event became public (crypto: hourly; stocks/commodities: next session open; Polymarket: hourly, +3h). Excess vs BTC (crypto) or SPY (US stocks); commodities absolute; Polymarket in probability points signed in the move direction; commodity returns are raw (for down-shocks negative = continuation). Insider entry = first regular-session open after the filing timestamp (same day if filed before 09:30 ET). One event per asset per 7 days. Median CI = 1000-resample bootstrap. weak = n<20. Crypto types capped at 120 random events (seed 7), insider buys at 150.",
@@ -383,7 +383,7 @@
     "mean_excess": -0.0803,
     "median_excess_7d": -0.09,
     "n": 131,
-    "note": "Polymarket 15-pt jump up: mean-reverts - fade the move",
+    "note": "Polymarket 15-pt jump up: mean-reverts from the signal price, but fading from a realistic entry 3h later lost money after spread and fees (independent test 2026-10-07: n=5,752 trades / 1,622 events, mean -2.8%, CI -4.8% to -0.6%) - do not chase and do not fade",
     "p25": -0.227,
     "p75": 0.015,
     "recent120": {
