@@ -1,5 +1,5 @@
 {
- "checked_at": 1791485687,
+ "checked_at": 1791572209,
  "priors": {
   "generated": "2026-09-26T15:18:18+00:00",
   "method": "Entry = first price >=3h after the event became public (crypto: hourly; stocks/commodities: next session open; Polymarket: hourly, +3h). Excess vs BTC (crypto) or SPY (US stocks); commodities absolute; Polymarket in probability points signed in the move direction; commodity returns are raw (for down-shocks negative = continuation). Insider entry = first regular-session open after the filing timestamp (same day if filed before 09:30 ET). One event per asset per 7 days. Median CI = 1000-resample bootstrap. weak = n<20. Crypto types capped at 120 random events (seed 7), insider buys at 150.",
